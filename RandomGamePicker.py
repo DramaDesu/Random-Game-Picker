@@ -132,8 +132,15 @@ class GameRandomPickerLayout(Widget):
     # import global variables
     global global_lang
     global hidden_checkbox_active
+
     global current_tags_excluded
     global current_tags_included
+
+    global current_genres_excluded
+    global current_genres_included
+
+    global current_themes_excluded
+    global current_themes_included
 
     game_data = {
         "title": 0,

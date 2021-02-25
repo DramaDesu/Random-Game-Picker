@@ -245,7 +245,7 @@ class GameRandomPickerLayout(Widget):
         user_excl_themes = format_tags(current_themes_excluded)
         user_incl_themes = format_tags(current_themes_included)
 
-        while True:
+        while len(self.picked_games) > 0:
             # Pick a random game
             chosen_row = self.picked_games.pop(0)
 

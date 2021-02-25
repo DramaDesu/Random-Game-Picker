@@ -86,6 +86,7 @@ if not os.path.exists(param_file_path):
     config.add_section('DATA')
 
     config['DATA']['DATA_BASE_HASH'] = ''
+    config['DATA']['DATA_ADDITIVE_HASH'] = ''
 
     with open(param_file_path, 'w') as configfile:  # save
         config.write(configfile)
@@ -583,13 +584,21 @@ class GameRandomPickerLayout(Widget):
 
 def create_or_update_data_base():
     gog_data_base_location = os.getenv('PROGRAMDATA') + '\\GOG.com\\Galaxy\\storage\\galaxy-2.0.db'
+    cached_base_db_hash = config['DATA']['DATA_BASE_HASH']
+    current_base_db_hash = str(md5(gog_data_base_location))
 
-    cached_db_hash = config['DATA']['DATA_BASE_HASH']
-    current_db_hash = str(md5(gog_data_base_location))
+    if cached_base_db_hash != current_base_db_hash:
+        config['DATA']['DATA_BASE_HASH'] = current_base_db_hash
+        should_construct_database = True
+    else:
+        gog_data_additive_location = os.getenv('PROGRAMDATA') + '\\GOG.com\\Galaxy\\storage\\galaxy-2.0.db-wal'
+        cached_additive_db_hash = config['DATA']['DATA_ADDITIVE_HASH']
+        current_additive_db_hash = str(md5(gog_data_additive_location))
 
-    if cached_db_hash != current_db_hash:
-        config['DATA']['DATA_BASE_HASH'] = current_db_hash
+        config['DATA']['DATA_ADDITIVE_HASH'] = current_additive_db_hash
+        should_construct_database = cached_additive_db_hash != current_additive_db_hash
 
+    if should_construct_database:
         # Create cvs file for user library
         sys.argv = ['galaxy_library_export.py', '-d=,', '--py-lists', '--all']
         galaxy_library_export.main()

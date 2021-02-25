@@ -302,6 +302,10 @@ class GameRandomPickerLayout(Widget):
                 print("There are no more games! Starting a new search loop\n")
                 break
 
+        pick_next_game_button = self.ids.pick_next_game_button
+        if pick_next_game_button:
+            pick_next_game_button.disabled = len(self.picked_games) == 0
+
     def pick_next_game_button_pressed(self):
         self.next_random_game()
 
@@ -458,6 +462,10 @@ class GameRandomPickerLayout(Widget):
                                           format_tags(current_themes_excluded), self.update_excluded_themes)
                 self.make_filter_dropdown(self.ids.include_themes_dropdown, all_game_themes,
                                           format_tags(current_themes_included), self.update_included_themes)
+
+        pick_next_game_button = self.ids.pick_next_game_button
+        if pick_next_game_button:
+            pick_next_game_button.disabled = True
 
     def get_values_from_filter_dropdown(self, button):
         dropdown_callback = list(self.filter_dropdowns[button])
